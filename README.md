@@ -12,7 +12,7 @@ More info:
 * [How to Contribute](http://opennebula.org/addons/contribute/)
 * Support: [OpenNebula user mailing list](http://opennebula.org/community:mailinglists)
 * Development: [OpenNebula developers mailing list](http://opennebula.org/community:mailinglists)
-* Issues Tracking: Github issues (https://github.com/OpenNebula/addon-iscsi/issues)
+* Issues Tracking: Github issues (https://github.com/OpenNebula/addon-sheepdog/issues)
 
 ## Authors
 
@@ -52,7 +52,7 @@ To install the driver you have to copy these files:
 
 t.b.d.
 
-### Configuring iSCSI Datastores
+### Configuring sheepdog Datastores
 
 t.b.d.
 
