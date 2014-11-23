@@ -20,7 +20,9 @@ More info:
 
 ## Compatibility
 
-This add-on is compatible with OpenNebula 4.10.
+This add-on is compatible with a *patched version of OpenNebula 4.10*
+
+https://github.com/OpenNebula/one/pull/40
 
 ## Requirements
 
