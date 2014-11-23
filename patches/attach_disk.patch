@@ -1,0 +1,19 @@
+diff --git a/src/vmm_mad/remotes/kvm/attach_disk b/src/vmm_mad/remotes/kvm/attach_disk
+index 3df84d8..d9768ff 100755
+--- a/src/vmm_mad/remotes/kvm/attach_disk
++++ b/src/vmm_mad/remotes/kvm/attach_disk
+@@ -81,6 +81,13 @@ rbd)
+     TYPE_XML="network"
+     SOURCE="rbd"
+     DEVICE="disk"
++    ;;
++sheepdog)
++    TYPE_SOURCE="protocol"
++    TYPE_XML="network"
++    SOURCE="sheepdog"
++    SOURCE_ARGS="name='$IMG_SRC'"
++    DEVICE="disk"
+ 
+     if [ "$CLONE" = "YES" ]; then
+         SOURCE_ARGS="name='${IMG_SRC}-${VMID}-${DISK_ID}'"
+

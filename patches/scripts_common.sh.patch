@@ -1,0 +1,12 @@
+diff --git a/src/mad/sh/scripts_common.sh b/src/mad/sh/scripts_common.sh
+index 817a3e0..35a0e48 100644
+--- a/src/mad/sh/scripts_common.sh
++++ b/src/mad/sh/scripts_common.sh
+@@ -39,6 +39,7 @@ MKSWAP=mkswap
+ QEMU_IMG=qemu-img
+ RADOS=rados
+ RBD=rbd
++DOG=dog
+ READLINK=readlink
+ RM=rm
+ SCP=scp
