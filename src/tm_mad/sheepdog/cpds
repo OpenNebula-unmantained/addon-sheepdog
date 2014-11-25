@@ -59,10 +59,15 @@ while IFS= read -r -d '' element; do
     XPATH_ELEMENTS[i++]="$element"
 done < <(onevm show -x $VM_ID| $XPATH \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SOURCE \
-                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/PERSISTENT)
+                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/PERSISTENT \
+                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SHEEPDOG_HOST)
 
 SRC="${XPATH_ELEMENTS[j++]}"
 PERSISTENT="${XPATH_ELEMENTS[j++]}"
+SHEEPDOG_HOST="${XPATH_ELEMENTS[j++]}"
+if [ -n "$SHEEPDOG_HOST" ]; then
+    SRC_HOST=$SHEEPDOG_HOST
+fi
 
 SHEEPDOG_SRC=`arg_path $SRC`
 SHEEPDOG_DST="${DST}"
@@ -71,8 +76,8 @@ SHEEPDOG_SNAP="$( basename $0 )_${VM_ID}-${DISK_ID}"
 COPY_CMD="$(cat <<EOF
 set -e
 
-$QEMU_IMG snapshot -c $SHEEPDOG_SNAP sheepdog:$SHEEPDOG_SRC
-$QEMU_IMG create -b sheepdog:$SHEEPDOG_SRC:$SHEEPDOG_SNAP sheepdog:$SHEEPDOG_DST
+sudo $DOG vdi snapshot -s $SHEEPDOG_SNAP $SHEEPDOG_SRC
+sudo $DOG vdi clone -s $SHEEPDOG_SNAP $SHEEPDOG_SRC $SHEEPDOG_DST
 sudo $DOG vdi delete -s $SHEEPDOG_SNAP $SHEEPDOG_SRC
 
 EOF
