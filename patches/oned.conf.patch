@@ -1,0 +1,13 @@
+diff --git a/share/etc/oned.conf b/share/etc/oned.conf
+index 366649b..5e37776 100644
+--- a/share/etc/oned.conf
++++ b/share/etc/oned.conf
+@@ -811,6 +811,8 @@ INHERIT_DATASTORE_ATTR  = "CEPH_HOST"
+ INHERIT_DATASTORE_ATTR  = "CEPH_SECRET"
+ INHERIT_DATASTORE_ATTR  = "CEPH_USER"
+ 
++INHERIT_DATASTORE_ATTR  = "SHEEPDOG_HOST"
++
+ INHERIT_DATASTORE_ATTR  = "GLUSTER_HOST"
+ INHERIT_DATASTORE_ATTR  = "GLUSTER_VOLUME"
+ 
