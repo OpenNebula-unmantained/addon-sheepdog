@@ -50,25 +50,27 @@ Workaround: Use Storage-Snapshots (Storage-tab in OpenNebula) to create a hot-co
 ! Create a backup of your system !
 
 * ssh to opennebula management system
-* cd /usr/src
-* git clone https://github.com/OpenNebula/addon-sheepdog
-* bash addon-sheepdog/install.sh
+* `cd /usr/src`
+* `git clone https://github.com/OpenNebula/addon-sheepdog`
+* `bash addon-sheepdog/install.sh`
 * restart opennebula
 
 ### Sheepdog nodes
 
 * oneadmin have to be able to execute "dog" as root without password
 
+```bash
 cat >/etc/sudoers.d/opennebula-sheepdog <<EOF
 Cmnd_Alias ONE_SHEEPDOG = /usr/sbin/dog
 oneadmin ALL=(ALL) NOPASSWD: ONE_SHEEPDOG
 EOF
+```
 
 ### Libvirt nodes
 
 *  sheepdog-support in qemu required
 
-qemu-img | grep -o sheepdog && echo 'OK' || echo 'MISSING!'
+`qemu-img | grep -o sheepdog && echo 'OK' || echo 'MISSING!'`
 
 ## Configuration
 
@@ -80,6 +82,7 @@ qemu-img | grep -o sheepdog && echo 'OK' || echo 'MISSING!'
 * click "create"
 * select your new datastore
 * add attribute
-** name: BRIDGE_LIST
-** value: a space seperated list of your sheepdog-nodes as value
-
+```
+name: BRIDGE_LIST
+value: a space seperated list of your sheepdog-nodes as value
+```
