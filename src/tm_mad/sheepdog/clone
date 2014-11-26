@@ -59,11 +59,17 @@ unset i j XPATH_ELEMENTS
 while IFS= read -r -d '' element; do
     XPATH_ELEMENTS[i++]="$element"
 done < <(onevm show -x $VM_ID| $XPATH \
+                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/BRIDGE_LIST \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SHEEPDOG_HOST)
 
+BRIDGE_LIST="${XPATH_ELEMENTS[j++]}"
 SHEEPDOG_HOST="${XPATH_ELEMENTS[j++]}"
 if [ -n "$SHEEPDOG_HOST" ]; then
-    DST_HOST=$SHEEPDOG_HOST
+    DST_HOST=`get_destination_host`
+    if [ -z "$DST_HOST" ]; then
+        error_message "Datastore template missing 'BRIDGE_LIST' attribute."
+        exit -1
+    fi
 fi
 
 #-------------------------------------------------------------------------------
@@ -74,7 +80,7 @@ CLONE_CMD=$(cat <<EOF
 set -e
 
 sudo $DOG vdi snapshot -s $SHEEPDOG_SNAP $SRC_PATH
-sudo $DOG vdi clone -s $SHEEPDOG_SNAP $SHEEPDOG_PATH $SHEEPDOG_DST
+sudo $DOG vdi clone -s $SHEEPDOG_SNAP $SRC_PATH $SHEEPDOG_DST
 sudo $DOG vdi delete -s $SHEEPDOG_SNAP $SRC_PATH
 
 EOF
