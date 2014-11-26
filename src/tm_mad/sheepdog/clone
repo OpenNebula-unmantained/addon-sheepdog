@@ -54,6 +54,18 @@ SHEEPDOG_SNAP="$( basename $0 )_${VM_ID}-${DISK_ID}"
 
 XPATH="${DRIVER_PATH}/../../datastore/xpath.rb --stdin"
 
+unset i j XPATH_ELEMENTS
+
+while IFS= read -r -d '' element; do
+    XPATH_ELEMENTS[i++]="$element"
+done < <(onevm show -x $VM_ID| $XPATH \
+                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SHEEPDOG_HOST)
+
+SHEEPDOG_HOST="${XPATH_ELEMENTS[j++]}"
+if [ -z "$SHEEPDOG_HOST" ]; then
+    SHEEPDOG_HOST="127.0.0.1"
+fi
+
 #-------------------------------------------------------------------------------
 # Clone the image
 #-------------------------------------------------------------------------------
@@ -61,9 +73,9 @@ XPATH="${DRIVER_PATH}/../../datastore/xpath.rb --stdin"
 CLONE_CMD=$(cat <<EOF
 set -e
 
-$QEMU_IMG snapshot -c $SHEEPDOG_SNAP sheepdog:$SRC_PATH
-$QEMU_IMG create -b sheepdog:$SRC_PATH:$SHEEPDOG_SNAP sheepdog:$SHEEPDOG_DST
-sudo $DOG vdi delete -s $SHEEPDOG_SNAP $SRC_PATH
+sudo $DOG vdi snapshot -a $SHEEPDOG_HOST -s $SHEEPDOG_SNAP $SRC_PATH
+sudo $DOG vdi clone -a $SHEEPDOG_HOST -s $SHEEPDOG_SNAP $SRC_PATH $SHEEPDOG_DST
+sudo $DOG vdi delete -a $SHEEPDOG_HOST -s $SHEEPDOG_SNAP $SRC_PATH
 
 EOF
 )

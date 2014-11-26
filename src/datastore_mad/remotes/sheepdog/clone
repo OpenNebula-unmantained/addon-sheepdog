@@ -68,7 +68,16 @@ SAFE_DIRS=""
 IMAGE_NAME="one-${ID}"
 SHEEPDOG_DST="${IMAGE_NAME}"
 
-ssh_exec_and_log "$DST_HOST" "$QEMU_IMG snapshot -c source_snap_$ID sheepdog:$SRC && $QEMU_IMG create -b sheepdog:$SRC:source_snap_$ID sheepdog:$SHEEPDOG_DST && sudo $DOG vdi delete -s source_snap_$ID $SRC" \
+DUMP_CMD=$(cat <<EOF
+set -e
+
+sudo $DOG vdi snapshot -s source_snap_$ID $SRC
+sudo $DOG vdi clone -s source_snap_$ID $SRC $SHEEPDOG_DST
+sudo $DOG vdi delete -s source_snap_$ID $SRC
+
+EOF
+)
+ssh_exec_and_log "$DST_HOST" "$DUMP_CMD" \
                 "Error cloning $SRC to $SHEEPDOG_DST in $DST_HOST"
 
 echo "$SHEEPDOG_DST"

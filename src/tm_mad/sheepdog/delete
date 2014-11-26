@@ -68,11 +68,16 @@ while IFS= read -r -d '' element; do
 done < <(onevm show -x $VM_ID| $XPATH \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SOURCE \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/PERSISTENT \
-		    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/CLONE ) 
+		    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/CLONE \
+                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SHEEPDOG_HOST)
 
 SRC="${XPATH_ELEMENTS[j++]}"
 PERSISTENT="${XPATH_ELEMENTS[j++]}"
 CLONE="${XPATH_ELEMENTS[j++]}"
+SHEEPDOG_HOST="${XPATH_ELEMENTS[j++]}"
+if [ -z "$SHEEPDOG_HOST" ]; then
+    SHEEPDOG_HOST="127.0.0.1"
+fi
 
 # Exit if persistent
 [ -n "$PERSISTENT" ] && log "Disk $DISK_ID is persistent - not deleting" && exit 0
@@ -96,7 +101,7 @@ log "Deleting $DST_PATH"
 DELETE_CMD=$(cat <<EOF
 set -e
 
-sudo $DOG vdi delete $SHEEPDOG_SRC
+sudo $DOG vdi delete -a $SHEEPDOG_HOST $SHEEPDOG_SRC
 
 EOF
 )
