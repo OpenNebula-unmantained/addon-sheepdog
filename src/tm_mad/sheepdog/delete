@@ -69,14 +69,20 @@ done < <(onevm show -x $VM_ID| $XPATH \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SOURCE \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/PERSISTENT \
 		    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/CLONE \
+                    /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/BRIDGE_LIST \
                     /VM/TEMPLATE/DISK[DISK_ID=$DISK_ID]/SHEEPDOG_HOST)
 
 SRC="${XPATH_ELEMENTS[j++]}"
 PERSISTENT="${XPATH_ELEMENTS[j++]}"
 CLONE="${XPATH_ELEMENTS[j++]}"
+BRIDGE_LIST="${XPATH_ELEMENTS[j++]}"
 SHEEPDOG_HOST="${XPATH_ELEMENTS[j++]}"
 if [ -n "$SHEEPDOG_HOST" ]; then
-    DST_HOST=$SHEEPDOG_HOST
+    DST_HOST=`get_destination_host`
+    if [ -z "$DST_HOST" ]; then
+        error_message "Datastore template missing 'BRIDGE_LIST' attribute."
+        exit -1
+    fi
 fi
 
 # Exit if persistent
