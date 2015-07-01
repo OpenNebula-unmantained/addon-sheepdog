@@ -70,7 +70,7 @@ EOF
 
 *  sheepdog-support in qemu required
 
-`qemu-img | grep -o sheepdog && echo 'OK' || echo 'MISSING!'`
+`qemu-img --help | grep -o sheepdog && echo 'OK' || echo 'MISSING!'`
 
 ## Configuration
 
@@ -84,5 +84,10 @@ EOF
 * add attribute
 ```
 name: BRIDGE_LIST
-value: a space seperated list of your sheepdog-nodes as value
+value: a space seperated list of sheepdog-nodes (used for maint. by one )
+```
+* optional attribute
+```
+name: SHEEPDOG_HOST
+value: a space seperated list of sheepdog-nodes (used as targets by qemu)
 ```

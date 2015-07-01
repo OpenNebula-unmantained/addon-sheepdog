@@ -70,6 +70,11 @@ if [ -z "$SHEEPDOG_HOST" ]; then
 fi
 
 SHEEPDOG_SRC=`arg_path $SRC`
+
+if [ -z "$PERSISTENT" ]; then
+        SHEEPDOG_SRC="${SHEEPDOG_SRC}-${VM_ID}-${DISK_ID}"
+fi
+
 SHEEPDOG_DST="${DST}"
 SHEEPDOG_SNAP="$( basename $0 )_${VM_ID}-${DISK_ID}"
 
